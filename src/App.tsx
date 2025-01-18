@@ -1,5 +1,13 @@
+import '@/index.css'
+
+import { Button } from '@/components/ui/button'
+
 function App() {
-  return <div>Olá Mundo</div>
+  return (
+    <div>
+      <Button>alskdn</Button>
+    </div>
+  )
 }
 
 export default App
