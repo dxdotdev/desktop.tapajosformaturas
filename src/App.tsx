@@ -1,6 +1,6 @@
 import '@/index.css'
 
-import { UserPen } from 'lucide-react'
+import { SquareUserRound, MessageSquareDashed } from 'lucide-react'
 import { toast } from 'sonner'
 import { writeText as setClipboard, readText as getClipboard } from '@tauri-apps/plugin-clipboard-manager'
 
@@ -30,6 +30,18 @@ function handleSetContact() {
     .catch((error) => toast.error(`Falha ao ler a Área de Transferência: ${error}`))
 }
 
+function handleFixMessage() {
+  getClipboard()
+    .then((content) => {
+      const result = content.replace('para seleção', 'para serem baixadas').replace('a seleção de', 'o download das')
+
+      setClipboard(result)
+        .then(() => toast.success('Texto copiado para a Área de Transferência!'))
+        .catch((error) => toast.error(`Erro ao copiar para a Área de Transferência: ${error}`))
+    })
+    .catch((error) => toast.error(`Falha ao ler a Área de Transferência: ${error}`))
+}
+
 function App() {
   return (
     <TooltipProvider>
@@ -43,11 +55,21 @@ function App() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button variant="outline" size="icon" className="p-8" onClick={handleSetContact}>
-                  <UserPen />
+                  <SquareUserRound />
                 </Button>
               </TooltipTrigger>
 
-              <TooltipContent>Configurar contato</TooltipContent>
+              <TooltipContent>Renomear contato</TooltipContent>
+            </Tooltip>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="outline" size="icon" className="p-8" onClick={handleFixMessage}>
+                  <MessageSquareDashed />
+                </Button>
+              </TooltipTrigger>
+
+              <TooltipContent>Ajustar mensagem de download</TooltipContent>
             </Tooltip>
           </CardContent>
         </Card>
