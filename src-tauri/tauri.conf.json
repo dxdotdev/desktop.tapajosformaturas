@@ -12,9 +12,11 @@
   "app": {
     "windows": [
       {
-        "title": "desktop-tapajosformaturas",
-        "width": 600,
-        "height": 700
+        "title": "Tapajós Formaturas",
+        "width": 800,
+        "height": 700,
+        "center": true,
+        "resizable": false
       }
     ],
     "security": {
@@ -23,7 +25,7 @@
   },
   "bundle": {
     "active": true,
-    "targets": "all",
+    "targets": "msi",
     "icon": ["icons/logo.png"]
   }
 }
