@@ -1,81 +1,40 @@
 import '@/index.css'
+import '@fontsource/geist-sans/400.css'
+import '@fontsource/geist-sans/500.css'
+import '@fontsource/geist-sans/600.css'
+import '@fontsource/geist-sans/700.css'
 
-import { SquareUserRound, MessageSquareDashed } from 'lucide-react'
-import { toast } from 'sonner'
-import { writeText as setClipboard, readText as getClipboard } from '@tauri-apps/plugin-clipboard-manager'
-
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { Toaster } from '@/components/ui/sonner'
-
-function handleSetContact() {
-  getClipboard()
-    .then((content) => {
-      const lower = (s: string) => s.toLowerCase()
-      const upper = (s: string) => s.toUpperCase()
-      const nameCase = (s: string) =>
-        lower(s)
-          .replace(/(^|\s)\w/g, (s) => upper(s))
-          .replace(/\sd?\ws?(\s|$)/g, (s) => lower(s))
-
-      const formattedContent = nameCase(content)
-      const [info, name] = formattedContent.split('-')
-      const result = name === undefined ? formattedContent : `${name.trim()} | ${info.trim().toUpperCase()}`
-
-      setClipboard(result)
-        .then(() => toast.success('Contato copiado para a Área de Transferência!'))
-        .catch((error) => toast.error(`Erro ao copiar para a Área de Transferência: ${error}`))
-    })
-    .catch((error) => toast.error(`Falha ao ler a Área de Transferência: ${error}`))
-}
-
-function handleFixMessage() {
-  getClipboard()
-    .then((content) => {
-      const result = content.replace('para seleção', 'para serem baixadas').replace('a seleção de', 'o download das')
-
-      setClipboard(result)
-        .then(() => toast.success('Texto copiado para a Área de Transferência!'))
-        .catch((error) => toast.error(`Erro ao copiar para a Área de Transferência: ${error}`))
-    })
-    .catch((error) => toast.error(`Falha ao ler a Área de Transferência: ${error}`))
-}
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Settings } from '@/blocks/settings'
+import { Actions } from '@/blocks/actions'
+import { TooltipProvider } from './components/ui/tooltip'
 
 function App() {
   return (
     <TooltipProvider>
-      <div className="space-y-4 px-6 py-4">
-        <Card>
-          <CardHeader>
-            <CardTitle>Ações Rápidas</CardTitle>
-          </CardHeader>
+      <div className="cursor-default select-none p-8 font-['Geist_Sans']">
+        <header className="flex items-center">
+          <h1 className="mb-4 flex-1 font-semibold text-3xl">Utilidades</h1>
+        </header>
 
-          <CardContent className="flex gap-4">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="outline" size="icon" className="p-8" onClick={handleSetContact}>
-                  <SquareUserRound />
-                </Button>
-              </TooltipTrigger>
+        <Tabs defaultValue="actions">
+          <TabsList className="grid w-64 grid-cols-2">
+            <TabsTrigger value="actions">Ações</TabsTrigger>
+            <TabsTrigger value="settings">Configurações</TabsTrigger>
+          </TabsList>
 
-              <TooltipContent>Renomear contato</TooltipContent>
-            </Tooltip>
+          <TabsContent value="actions">
+            <Actions />
+          </TabsContent>
 
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="outline" size="icon" className="p-8" onClick={handleFixMessage}>
-                  <MessageSquareDashed />
-                </Button>
-              </TooltipTrigger>
+          <TabsContent value="settings">
+            <Settings />
+          </TabsContent>
+        </Tabs>
 
-              <TooltipContent>Ajustar mensagem de download</TooltipContent>
-            </Tooltip>
-          </CardContent>
-        </Card>
+        <Toaster />
       </div>
-
-      <Toaster />
     </TooltipProvider>
   )
 }

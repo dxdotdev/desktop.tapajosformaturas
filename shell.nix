@@ -2,6 +2,11 @@ let
   pkgs = import <nixpkgs> { };
 in
 pkgs.mkShell {
+  shellHook = ''
+    pnpm i
+    pnpm tauri dev
+  '';
+
   nativeBuildInputs = with pkgs; [
     pkg-config
     gobject-introspection
