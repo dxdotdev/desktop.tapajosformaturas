@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input'
 
 const formSchema = z.object({
   authorization: z.string().nonempty(),
-  cookie: z.string().nonempty(),
+  browser: z.string().nonempty(),
 })
 
 export function Settings() {
@@ -18,17 +18,15 @@ export function Settings() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       authorization: localStorage.getItem('alboomAuthorizationToken') ?? '',
+      browser: localStorage.getItem('openWithBrowser') ?? '',
     },
   })
 
   function handleSubmit(form: z.infer<typeof formSchema>) {
-    try {
-      localStorage.setItem('alboomAuthorizationToken', form.authorization)
+    localStorage.setItem('alboomAuthorizationToken', form.authorization)
+    localStorage.setItem('openWithBrowser', form.browser)
 
-      toast.success('Configurações salvas!')
-    } catch (error) {
-      toast.error(`Erro salvando configurações: ${error}`)
-    }
+    toast.success('Configurações salvas!')
   }
 
   return (
@@ -41,7 +39,7 @@ export function Settings() {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)}>
           <CardContent className="space-y-2">
-            <h2>Alboom Proof</h2>
+            <h2>Criar Links</h2>
 
             <FormField
               name="authorization"
@@ -49,6 +47,22 @@ export function Settings() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Authorization</FormLabel>
+
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              name="browser"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Navegador</FormLabel>
 
                   <FormControl>
                     <Input {...field} />

@@ -15,8 +15,7 @@
         "title": "Tapajós Formaturas",
         "width": 900,
         "height": 700,
-        "center": true,
-        "resizable": false
+        "center": true
       }
     ],
     "security": {
