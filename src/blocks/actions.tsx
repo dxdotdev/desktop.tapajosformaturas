@@ -1,7 +1,7 @@
 import { open as openDialog } from '@tauri-apps/plugin-dialog'
-import { readDir } from '@tauri-apps/plugin-fs'
-import { openUrl } from '@tauri-apps/plugin-opener'
+import { readDir, rename as renameDir } from '@tauri-apps/plugin-fs'
 import { platform } from '@tauri-apps/plugin-os'
+import { open as openWith } from '@tauri-apps/plugin-shell'
 import { Link } from 'lucide-react'
 import { toast } from 'sonner'
 import { ulid } from 'ulid'
@@ -95,22 +95,35 @@ async function handleCreateLink() {
     })
 
     const eventFolders = await readDir(folderPath)
+    const date = '21.01.2025'
 
-    eventFolders.map((event) => {
-      if (event.isDirectory)
+    eventFolders.map(async (folder) => {
+      if (folder.isDirectory) {
         alboom.post(`/collections/${data.collection.id}/folders/`, {
-          name: event.name.indexOf('-') !== -1 ? event.name.split('-').at(0) : event.name,
+          name: folder.name.indexOf('-') !== -1 ? folder.name.split('-').at(0) : folder.name,
         })
+
+        const newName =
+          folder.name.indexOf('-') === -1
+            ? folder.name.concat(`- ENVIADO ${date}`)
+            : (folder.name.split('-').at(0)?.concat(`- ENVIADO ${date}`) ?? '')
+
+        renameDir(`${folderPath}${pathSeparator}${folder.name}`, `${folderPath}${pathSeparator}${newName}`).catch(
+          (error) => {
+            throw Error(`Erro renomear pastas: ${error}`)
+          },
+        )
+      }
     })
+
+    const url = `https://proof.alboompro.com/selection/images/${data.collection.id}`
+
+    if (platform() === 'windows')
+      openWith(url, 'start').catch((error) => {
+        throw Error(`Erro ao abrir navegador: ${error}`)
+      })
 
     toast.success('Link criado com sucesso!')
-
-    openUrl(
-      `https://proof.alboompro.com/selection/images/${data.collection.id}`,
-      localStorage.getItem('openWithBrowser') ?? '',
-    ).catch((error) => {
-      throw Error(`Erro ao abrir navegador: ${error}`)
-    })
   } catch (error) {
     toast.error(`${error}`)
   }

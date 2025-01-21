@@ -5,11 +5,14 @@
   "windows": ["main"],
   "permissions": [
     "core:default",
+    "core:window:allow-close",
+    "core:window:allow-minimize",
+    "core:window:allow-toggle-maximize",
     "opener:default",
-    "clipboard-manager:allow-write-text",
-    "clipboard-manager:allow-read-text",
     "dialog:default",
     "os:default",
-    "fs:default"
+    "fs:default",
+    "fs:allow-rename",
+    "shell:default"
   ]
 }
