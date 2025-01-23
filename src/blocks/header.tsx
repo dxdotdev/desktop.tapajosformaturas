@@ -13,7 +13,7 @@ export function Header() {
       </Button>
 
       <Button variant="ghost" size="icon" className="rounded-none" onClick={() => window.toggleMaximize()}>
-        <Square className="scale-90" />
+        <Square className="scale-75" />
       </Button>
 
       <Button variant="ghost" size="icon" className="rounded-none" onClick={() => window.close()}>

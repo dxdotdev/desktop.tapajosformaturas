@@ -13,6 +13,10 @@
     "os:default",
     "fs:default",
     "fs:allow-rename",
-    "shell:default"
+    "shell:allow-execute",
+    "clipboard-manager:allow-read-text",
+    "clipboard-manager:allow-write-text",
+    "global-shortcut:allow-is-registered",
+    "global-shortcut:allow-register"
   ]
 }

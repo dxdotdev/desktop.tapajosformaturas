@@ -1,8 +1,11 @@
+import { readText as getClipboard, writeText as setClipboard } from '@tauri-apps/plugin-clipboard-manager'
 import { open as openDialog } from '@tauri-apps/plugin-dialog'
 import { readDir, rename as renameDir } from '@tauri-apps/plugin-fs'
+import { isRegistered as isShortcutRegistered, register as setShortcut } from '@tauri-apps/plugin-global-shortcut'
 import { platform } from '@tauri-apps/plugin-os'
-import { open as openWith } from '@tauri-apps/plugin-shell'
-import { Link } from 'lucide-react'
+import { Command } from '@tauri-apps/plugin-shell'
+import dayjs from 'dayjs'
+import { MessageSquareShare, BookUser, CaseUpper, Link } from 'lucide-react'
 import { toast } from 'sonner'
 import { ulid } from 'ulid'
 
@@ -50,9 +53,8 @@ const createLinkRequestValues = {
   selection_quantity_type: 'unlimited',
 }
 
-async function handleCreateLink() {
+async function createLink(folderPath: string | null) {
   try {
-    const folderPath = await openDialog({ title: 'Criar Link', directory: true, multiple: false })
     if (folderPath === null) throw Error('Erro ao ler pasta selecionada!')
 
     const main = folderPath.match(validationRegex)?.at(0)
@@ -95,7 +97,7 @@ async function handleCreateLink() {
     })
 
     const eventFolders = await readDir(folderPath)
-    const date = '21.01.2025'
+    const date = dayjs(new Date()).format('DD.MM.YYYY')
 
     eventFolders.map(async (folder) => {
       if (folder.isDirectory) {
@@ -117,9 +119,11 @@ async function handleCreateLink() {
     })
 
     const url = `https://proof.alboompro.com/selection/images/${data.collection.id}`
+    const browser = localStorage.getItem('browserCommand') ?? ''
 
-    if (platform() === 'windows')
-      openWith(url, 'start').catch((error) => {
+    await Command.create(browser, [url])
+      .execute()
+      .catch((error) => {
         throw Error(`Erro ao abrir navegador: ${error}`)
       })
 
@@ -129,7 +133,65 @@ async function handleCreateLink() {
   }
 }
 
+async function handleCreateLink() {
+  const folderPath = await openDialog({ title: 'Criar Link', directory: true, multiple: false })
+  await createLink(folderPath)
+}
+
+async function handleSetUppercase() {
+  const clipboard = await getClipboard()
+  await setClipboard(clipboard.toUpperCase())
+}
+
+function handleSetContact() {
+  getClipboard()
+    .then((content) => {
+      const lower = (s: string) => s.toLowerCase()
+      const upper = (s: string) => s.toUpperCase()
+      const nameCase = (s: string) =>
+        lower(s)
+          .replace(/(^|\s)\w/g, (s) => upper(s))
+          .replace(/\sd?\ws?(\s|$)/g, (s) => lower(s))
+      const formattedContent = nameCase(content)
+      const [info, name] = formattedContent.split('-')
+      const result = name === undefined ? formattedContent : `${name.trim()} | ${info.trim().toUpperCase()}`
+      setClipboard(result)
+        .then(() => toast.success('Contato copiado para a Área de Transferência!'))
+        .catch((error) => toast.error(`Erro ao copiar para a Área de Transferência: ${error}`))
+    })
+    .catch((error) => toast.error(`Falha ao ler a Área de Transferência: ${error}`))
+}
+
+function handleAdjustDownloadMessage() {
+  getClipboard().then((content) =>
+    setClipboard(content.replace('para seleção', 'para serem baixadas').replace('a seleção de', 'o download das')),
+  )
+}
+
 export function Actions() {
+  if (!isShortcutRegistered('CommandOrControl+Shift+L'))
+    setShortcut('CommandOrControl+Shift+L', async () => {
+      const folderPath = await getClipboard()
+      await createLink(folderPath)
+    }).catch((error) => {
+      toast.error(`Erro ao configurar atalho global: ${error}`)
+    })
+
+  if (!isShortcutRegistered('CommandOrControl+Shift+U'))
+    setShortcut('CommandOrControl+Shift+U', handleSetUppercase).catch((error) => {
+      toast.error(`Erro ao configurar atalho global: ${error}`)
+    })
+
+  if (!isShortcutRegistered('CommandOrControl+Shift+C'))
+    setShortcut('CommandOrControl+Shift+C', handleSetContact).catch((error) => {
+      toast.error(`Erro ao configurar atalho global: ${error}`)
+    })
+
+  if (!isShortcutRegistered('CommandOrControl+Shift+M'))
+    setShortcut('CommandOrControl+Shift+M', handleAdjustDownloadMessage).catch((error) => {
+      toast.error(`Erro ao configurar atalho global: ${error}`)
+    })
+
   return (
     <Card>
       <CardHeader>
@@ -137,7 +199,7 @@ export function Actions() {
         <CardDescription>Ações rápidas</CardDescription>
       </CardHeader>
 
-      <CardContent className="space-y-2">
+      <CardContent className="space-x-2">
         <Tooltip>
           <TooltipTrigger>
             <Button size="icon" variant="outline" className="p-8" onClick={handleCreateLink}>
@@ -146,6 +208,36 @@ export function Actions() {
           </TooltipTrigger>
 
           <TooltipContent>Criar link no Alboom</TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+          <TooltipTrigger>
+            <Button size="icon" variant="outline" className="p-8" onClick={handleSetUppercase}>
+              <CaseUpper className="scale-125" />
+            </Button>
+          </TooltipTrigger>
+
+          <TooltipContent>Área de transferência para caixa alta</TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+          <TooltipTrigger>
+            <Button size="icon" variant="outline" className="p-8" onClick={handleSetContact}>
+              <BookUser />
+            </Button>
+          </TooltipTrigger>
+
+          <TooltipContent>Ajustar nome de contato</TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+          <TooltipTrigger>
+            <Button size="icon" variant="outline" className="p-8" onClick={handleAdjustDownloadMessage}>
+              <MessageSquareShare />
+            </Button>
+          </TooltipTrigger>
+
+          <TooltipContent>Ajustar mensagem de download</TooltipContent>
         </Tooltip>
       </CardContent>
     </Card>
