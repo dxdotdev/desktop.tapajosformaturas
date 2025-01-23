@@ -5,7 +5,7 @@ import { isRegistered as isShortcutRegistered, register as setShortcut } from '@
 import { platform } from '@tauri-apps/plugin-os'
 import { Command } from '@tauri-apps/plugin-shell'
 import dayjs from 'dayjs'
-import { MessageSquareShare, BookUser, CaseUpper, Link } from 'lucide-react'
+import { BookUser, CaseUpper, Link, MessageSquareShare } from 'lucide-react'
 import { toast } from 'sonner'
 import { ulid } from 'ulid'
 
@@ -15,7 +15,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 
-const validationRegex = /[\wÀ-ú ]*(\d{4}|\( \d{2}\.\d{2}\.\d{4} \))? - .*$/
+const validationRegex = /[\wÀ-ú°ª ]*(\d{4}|\( \d{2}\.\d{2}\.\d{4} \))? - .*$/
 const pathSeparator = platform() === 'windows' ? '\\' : '/'
 const createLinkRequestValues = {
   // biome-ignore lint/style/useNamingConvention:
@@ -67,16 +67,16 @@ async function createLink(folderPath: string | null) {
         info = main.split(pathSeparator).at(0)?.split('-').at(0)?.trim()
         break
 
-      case /[\wÀ-ú ]* - [\wÀ-ú ]* \( [\wÀ-ú ]* \)$/.test(elementName):
+      case /[\wÀ-ú°ª ]* - [\wÀ-ú ]* \( [\wÀ-ú ]* \)$/.test(elementName):
         info = main.replace(' -', '').split('(').at(0)?.trim()
         break
 
-      case /[\wÀ-ú ]*( \( \d{2}\.\d{2}\.\d{4} \))? - [\wÀ-ú ]*$/.test(elementName):
+      case /[\wÀ-ú°ª ]*( \( \d{2}\.\d{2}\.\d{4} \))? - [\wÀ-ú ]*$/.test(elementName):
         info = main.split('-').at(0)?.trim()
         elementName = main.split('-').at(1)?.trim() ?? ''
         break
 
-      case /[\wÀ-ú ]* OUTORGA \( \d{2}\.\d{2}\.\d{4} \)/.test(folderPath ?? ''):
+      case /[\wÀ-ú°ª ]* OUTORGA \( \d{2}\.\d{2}\.\d{4} \)/.test(folderPath ?? ''):
         info = elementName.split(pathSeparator).reverse().at(2)?.trim()
         break
 
@@ -169,28 +169,24 @@ function handleAdjustDownloadMessage() {
 }
 
 export function Actions() {
-  if (!isShortcutRegistered('CommandOrControl+Shift+L'))
-    setShortcut('CommandOrControl+Shift+L', async () => {
-      const folderPath = await getClipboard()
-      await createLink(folderPath)
-    }).catch((error) => {
-      toast.error(`Erro ao configurar atalho global: ${error}`)
-    })
+  isShortcutRegistered('CommandOrControl+Shift+L').then(async (registered) => {
+    if (!registered)
+      await setShortcut('CommandOrControl+Shift+L', async () => {
+        getClipboard().then((content) => createLink(content))
+      })
+  })
 
-  if (!isShortcutRegistered('CommandOrControl+Shift+U'))
-    setShortcut('CommandOrControl+Shift+U', handleSetUppercase).catch((error) => {
-      toast.error(`Erro ao configurar atalho global: ${error}`)
-    })
+  isShortcutRegistered('CommandOrControl+Shift+U').then(async (registered) => {
+    if (!registered) await setShortcut('CommandOrControl+Shift+U', handleSetUppercase)
+  })
 
-  if (!isShortcutRegistered('CommandOrControl+Shift+C'))
-    setShortcut('CommandOrControl+Shift+C', handleSetContact).catch((error) => {
-      toast.error(`Erro ao configurar atalho global: ${error}`)
-    })
+  isShortcutRegistered('CommandOrControl+Shift+C').then(async (registered) => {
+    if (!registered) await setShortcut('CommandOrControl+Shift+C', handleSetContact)
+  })
 
-  if (!isShortcutRegistered('CommandOrControl+Shift+M'))
-    setShortcut('CommandOrControl+Shift+M', handleAdjustDownloadMessage).catch((error) => {
-      toast.error(`Erro ao configurar atalho global: ${error}`)
-    })
+  isShortcutRegistered('CommandOrControl+Shift+M').then(async (registered) => {
+    if (!registered) await setShortcut('CommandOrControl+Shift+M', handleAdjustDownloadMessage)
+  })
 
   return (
     <Card>
