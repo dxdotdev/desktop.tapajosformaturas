@@ -7,7 +7,7 @@ export function Header() {
   const window = getCurrentWindow()
 
   return (
-    <header className="flex justify-end">
+    <header className="flex justify-end" data-tauri-drag-region>
       <Button variant="ghost" size="icon" className="w-12 rounded-none" onClick={() => window.minimize()}>
         <Minus />
       </Button>

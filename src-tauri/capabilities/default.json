@@ -6,6 +6,7 @@
   "permissions": [
     "clipboard-manager:allow-read-text",
     "clipboard-manager:allow-write-text",
+    "core:window:allow-start-dragging",
     "core:default",
     "core:window:allow-close",
     "core:window:allow-minimize",
