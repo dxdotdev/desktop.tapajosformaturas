@@ -8,15 +8,20 @@ export function Header() {
 
   return (
     <header className="flex justify-end">
-      <Button variant="ghost" size="icon" className="rounded-none" onClick={() => window.minimize()}>
+      <Button variant="ghost" size="icon" className="w-12 rounded-none" onClick={() => window.minimize()}>
         <Minus />
       </Button>
 
-      <Button variant="ghost" size="icon" className="rounded-none" onClick={() => window.toggleMaximize()}>
+      <Button variant="ghost" size="icon" className="w-12 rounded-none" onClick={() => window.toggleMaximize()}>
         <Square className="scale-75" />
       </Button>
 
-      <Button variant="ghost" size="icon" className="rounded-none" onClick={() => window.close()}>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="w-12 rounded-none hover:bg-destructive"
+        onClick={() => window.close()}
+      >
         <X />
       </Button>
     </header>

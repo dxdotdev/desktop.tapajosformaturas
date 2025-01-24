@@ -1,7 +1,6 @@
 import '@/index.css'
 import '@fontsource/geist-sans/400.css'
 import '@fontsource/geist-sans/500.css'
-import '@fontsource/geist-sans/600.css'
 import '@fontsource/geist-sans/700.css'
 
 import { Actions } from '@/blocks/actions'
@@ -15,6 +14,7 @@ function App() {
   return (
     <>
       <Header />
+
       <TooltipProvider>
         <div className="cursor-default select-none p-8 font-['Geist_Sans']">
           <header className="flex items-center">

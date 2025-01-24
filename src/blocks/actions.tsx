@@ -1,9 +1,7 @@
 import { readText as getClipboard, writeText as setClipboard } from '@tauri-apps/plugin-clipboard-manager'
 import { open as openDialog } from '@tauri-apps/plugin-dialog'
 import { readDir, rename as renameDir } from '@tauri-apps/plugin-fs'
-import { isRegistered as isShortcutRegistered, register as setShortcut } from '@tauri-apps/plugin-global-shortcut'
 import { platform } from '@tauri-apps/plugin-os'
-import { Command } from '@tauri-apps/plugin-shell'
 import dayjs from 'dayjs'
 import { BookUser, CaseUpper, Link, MessageSquareShare } from 'lucide-react'
 import { toast } from 'sonner'
@@ -118,14 +116,7 @@ async function createLink(folderPath: string | null) {
       }
     })
 
-    const url = `https://proof.alboompro.com/selection/images/${data.collection.id}`
-    const browser = localStorage.getItem('browserCommand') ?? ''
-
-    await Command.create(browser, [url])
-      .execute()
-      .catch((error) => {
-        throw Error(`Erro ao abrir navegador: ${error}`)
-      })
+    // const url = `https://proof.alboompro.com/selection/images/${data.collection.id}`
 
     toast.success('Link criado com sucesso!')
   } catch (error) {
@@ -169,25 +160,6 @@ function handleAdjustDownloadMessage() {
 }
 
 export function Actions() {
-  isShortcutRegistered('CommandOrControl+Shift+L').then(async (registered) => {
-    if (!registered)
-      await setShortcut('CommandOrControl+Shift+L', async () => {
-        getClipboard().then((content) => createLink(content))
-      })
-  })
-
-  isShortcutRegistered('CommandOrControl+Shift+U').then(async (registered) => {
-    if (!registered) await setShortcut('CommandOrControl+Shift+U', handleSetUppercase)
-  })
-
-  isShortcutRegistered('CommandOrControl+Shift+C').then(async (registered) => {
-    if (!registered) await setShortcut('CommandOrControl+Shift+C', handleSetContact)
-  })
-
-  isShortcutRegistered('CommandOrControl+Shift+M').then(async (registered) => {
-    if (!registered) await setShortcut('CommandOrControl+Shift+M', handleAdjustDownloadMessage)
-  })
-
   return (
     <Card>
       <CardHeader>
