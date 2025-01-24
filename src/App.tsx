@@ -3,11 +3,11 @@ import '@fontsource/geist-sans/400.css'
 import '@fontsource/geist-sans/500.css'
 import '@fontsource/geist-sans/700.css'
 
-import { Actions } from '@/blocks/actions'
-import { Header } from '@/blocks/header'
-import { Settings } from '@/blocks/settings'
+import { Header } from '@/components/blocks/header'
 import { Toaster } from '@/components/ui/sonner'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { LinksPage } from '@/pages/links'
+import { SettingsPage } from '@/pages/settings'
 import { TooltipProvider } from './components/ui/tooltip'
 
 function App() {
@@ -16,23 +16,19 @@ function App() {
       <Header />
 
       <TooltipProvider>
-        <div className="cursor-default select-none p-8 font-['Geist_Sans']">
-          <header className="flex items-center">
-            <h1 className="mb-4 flex-1 font-semibold text-3xl">Utilidades</h1>
-          </header>
-
-          <Tabs defaultValue="actions">
-            <TabsList className="grid w-64 grid-cols-2">
-              <TabsTrigger value="actions">Ações</TabsTrigger>
+        <div className="flex-1 cursor-default select-none px-8 pb-8 font-['Geist_Sans']">
+          <Tabs defaultValue="links" className="flex h-full flex-col">
+            <TabsList className="grid w-80 grid-cols-2">
+              <TabsTrigger value="links">Criação de Links</TabsTrigger>
               <TabsTrigger value="settings">Configurações</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="actions">
-              <Actions />
+            <TabsContent value="links" className="flex-1">
+              <LinksPage />
             </TabsContent>
 
             <TabsContent value="settings">
-              <Settings />
+              <SettingsPage />
             </TabsContent>
           </Tabs>
 
