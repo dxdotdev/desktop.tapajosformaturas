@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 
-const validationRegex = /[\wÀ-ú°ª ]*(\d{4}|\( \d{2}\.\d{2}\.\d{4} \))? - .*$/
+const validationRegex = /[\wÀ-úºª ]*(\d{4}|\( \d{2}\.\d{2}\.\d{4} \))? - .*$/
 const pathSeparator = platform() === 'windows' ? '\\' : '/'
 const createLinkRequestValues = {
   // biome-ignore lint/style/useNamingConvention:
@@ -65,16 +65,16 @@ async function createLink(folderPath: string | null) {
         info = main.split(pathSeparator).at(0)?.split('-').at(0)?.trim()
         break
 
-      case /[\wÀ-ú°ª ]* - [\wÀ-ú ]* \( [\wÀ-ú ]* \)$/.test(elementName):
+      case /[\wÀ-úºª ]* - [\wÀ-ú ]* \( [\wÀ-ú ]* \)$/.test(elementName):
         info = main.replace(' -', '').split('(').at(0)?.trim()
         break
 
-      case /[\wÀ-ú°ª ]*( \( \d{2}\.\d{2}\.\d{4} \))? - [\wÀ-ú ]*$/.test(elementName):
+      case /[\wÀ-úºª ]*( \( \d{2}\.\d{2}\.\d{4} \))? - [\wÀ-ú ]*$/.test(elementName):
         info = main.split('-').at(0)?.trim()
         elementName = main.split('-').at(1)?.trim() ?? ''
         break
 
-      case /[\wÀ-ú°ª ]* OUTORGA \( \d{2}\.\d{2}\.\d{4} \)/.test(folderPath ?? ''):
+      case /[\wÀ-úºª ]* OUTORGA \( \d{2}\.\d{2}\.\d{4} \)/.test(folderPath ?? ''):
         info = elementName.split(pathSeparator).reverse().at(2)?.trim()
         break
 
