@@ -3,7 +3,7 @@ import { open as openDialog } from '@tauri-apps/plugin-dialog'
 import { readDir, rename as renameDir } from '@tauri-apps/plugin-fs'
 import { platform } from '@tauri-apps/plugin-os'
 import dayjs from 'dayjs'
-import { BookUser, CaseUpper, Link, MessageSquareShare } from 'lucide-react'
+import { BookUser, CaseUpper, Link, MessageSquareShare, MonitorDown } from 'lucide-react'
 import { toast } from 'sonner'
 import { ulid } from 'ulid'
 
@@ -119,7 +119,7 @@ async function createLink(folderPath: string | null) {
     const url = `https://proof.alboompro.com/selection/images/${data.collection.id}`
 
     setClipboard(url)
-      .then(() => toast.success('Linkcopiado para a Área de Transferência!'))
+      .then(() => toast.success('Link copiado para a Área de Transferência!'))
       .catch((error) => toast.error(`Erro ao copiar link para a Área de Transferência: ${error}`))
 
     toast.success('Link criado com sucesso!')
@@ -160,6 +160,14 @@ function handleSetContact() {
 function handleAdjustDownloadMessage() {
   getClipboard().then((content) =>
     setClipboard(content.replace('para seleção', 'para serem baixadas').replace('a seleção de', 'o download das'))
+      .then(() => toast.success('Mensagem copiada para a Área de Transferência!'))
+      .catch((error) => toast.error(`Erro ao copiar mensagem para a Área de Transferência: ${error}`)),
+  )
+}
+
+function handleVideoMessage() {
+  getClipboard().then(() =>
+    setClipboard('Aqui estão as instruções para baixar as fotos')
       .then(() => toast.success('Mensagem copiada para a Área de Transferência!'))
       .catch((error) => toast.error(`Erro ao copiar mensagem para a Área de Transferência: ${error}`)),
   )
@@ -212,6 +220,16 @@ export function Actions() {
           </TooltipTrigger>
 
           <TooltipContent>Ajustar mensagem de download</TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+          <TooltipTrigger>
+            <Button size="icon" variant="outline" className="p-8" onClick={handleVideoMessage}>
+              <MonitorDown />
+            </Button>
+          </TooltipTrigger>
+
+          <TooltipContent>Mensagem para video de download</TooltipContent>
         </Tooltip>
       </CardContent>
     </Card>
