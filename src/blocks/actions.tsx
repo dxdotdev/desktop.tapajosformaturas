@@ -3,16 +3,15 @@ import { open as openDialog } from '@tauri-apps/plugin-dialog'
 import { readDir, rename as renameDir } from '@tauri-apps/plugin-fs'
 import { platform } from '@tauri-apps/plugin-os'
 import dayjs from 'dayjs'
+import { BookUser, CaseUpper, Link, MessageSquareShare } from 'lucide-react'
 import { toast } from 'sonner'
 import { ulid } from 'ulid'
 
 import { alboom } from '@/lib/alboom'
 
-import { Card, CardContent } from '@/components/ui/card'
-import { Separator } from '@/components/ui/separator'
-import { ScrollArea } from '@/components/ui/scroll-area'
 import { Button } from '@/components/ui/button'
-import { CirclePlus } from 'lucide-react'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 
 const validationRegex = /[\wÀ-ú°ª ]*(\d{4}|\( \d{2}\.\d{2}\.\d{4} \))? - .*$/
 const pathSeparator = platform() === 'windows' ? '\\' : '/'
@@ -160,19 +159,54 @@ function handleAdjustDownloadMessage() {
   )
 }
 
-export function LinksPage() {
+export function Actions() {
   return (
-    <Card className="h-full">
-      <CardContent className="flex h-full p-0">
-        <ScrollArea className="h-[44rem] w-80 p-4 py-0">
-          <Button variant="outline" size="icon" className="mt-4 h-14 w-full rounded-lg">
-            <CirclePlus />
-          </Button>
-        </ScrollArea>
+    <Card>
+      <CardHeader>
+        <CardTitle>Ações</CardTitle>
+        <CardDescription>Ações rápidas</CardDescription>
+      </CardHeader>
 
-        <Separator orientation="vertical" decorative />
+      <CardContent className="space-x-2">
+        <Tooltip>
+          <TooltipTrigger>
+            <Button size="icon" variant="outline" className="p-8" onClick={handleCreateLink}>
+              <Link />
+            </Button>
+          </TooltipTrigger>
 
-        <div className="p-4" />
+          <TooltipContent>Criar link no Alboom</TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+          <TooltipTrigger>
+            <Button size="icon" variant="outline" className="p-8" onClick={handleSetUppercase}>
+              <CaseUpper className="scale-125" />
+            </Button>
+          </TooltipTrigger>
+
+          <TooltipContent>Área de transferência para caixa alta</TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+          <TooltipTrigger>
+            <Button size="icon" variant="outline" className="p-8" onClick={handleSetContact}>
+              <BookUser />
+            </Button>
+          </TooltipTrigger>
+
+          <TooltipContent>Ajustar nome de contato</TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+          <TooltipTrigger>
+            <Button size="icon" variant="outline" className="p-8" onClick={handleAdjustDownloadMessage}>
+              <MessageSquareShare />
+            </Button>
+          </TooltipTrigger>
+
+          <TooltipContent>Ajustar mensagem de download</TooltipContent>
+        </Tooltip>
       </CardContent>
     </Card>
   )
