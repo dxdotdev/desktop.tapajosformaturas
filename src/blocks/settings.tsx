@@ -10,7 +10,6 @@ import { Input } from '@/components/ui/input'
 
 const formSchema = z.object({
   authorization: z.string().nonempty(),
-  browserCommand: z.string().nonempty(),
 })
 
 export function Settings() {
@@ -18,13 +17,11 @@ export function Settings() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       authorization: localStorage.getItem('alboomAuthorizationToken') ?? '',
-      browserCommand: localStorage.getItem('browserCommand') ?? '',
     },
   })
 
   function handleSubmit(form: z.infer<typeof formSchema>) {
     localStorage.setItem('alboomAuthorizationToken', form.authorization)
-    localStorage.setItem('browserCommand', form.browserCommand)
 
     toast.success('Configurações salvas!')
   }
@@ -40,29 +37,12 @@ export function Settings() {
         <form onSubmit={form.handleSubmit(handleSubmit)}>
           <CardContent className="space-y-2">
             <h2>Criar Links</h2>
-
             <FormField
               name="authorization"
               control={form.control}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Authorization</FormLabel>
-
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              name="browserCommand"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Comando do Navegador</FormLabel>
 
                   <FormControl>
                     <Input {...field} />

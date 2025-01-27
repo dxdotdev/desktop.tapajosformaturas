@@ -116,7 +116,11 @@ async function createLink(folderPath: string | null) {
       }
     })
 
-    // const url = `https://proof.alboompro.com/selection/images/${data.collection.id}`
+    const url = `https://proof.alboompro.com/selection/images/${data.collection.id}`
+
+    setClipboard(url)
+      .then(() => toast.success('Linkcopiado para a Área de Transferência!'))
+      .catch((error) => toast.error(`Erro ao copiar link para a Área de Transferência: ${error}`))
 
     toast.success('Link criado com sucesso!')
   } catch (error) {
@@ -155,7 +159,9 @@ function handleSetContact() {
 
 function handleAdjustDownloadMessage() {
   getClipboard().then((content) =>
-    setClipboard(content.replace('para seleção', 'para serem baixadas').replace('a seleção de', 'o download das')),
+    setClipboard(content.replace('para seleção', 'para serem baixadas').replace('a seleção de', 'o download das'))
+      .then(() => toast.success('Mensagem copiada para a Área de Transferência!'))
+      .catch((error) => toast.error(`Erro ao copiar mensagem para a Área de Transferência: ${error}`)),
   )
 }
 
