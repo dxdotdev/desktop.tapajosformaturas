@@ -105,8 +105,8 @@ async function createLink(folderPath: string | null) {
 
         const newName =
           folder.name.indexOf('-') === -1
-            ? folder.name.concat(`- ENVIADO ${date}`)
-            : (folder.name.split('-').at(0)?.concat(`- ENVIADO ${date}`) ?? '')
+            ? folder.name.concat(` - ENVIADO ${date}`)
+            : (folder.name.split('-').at(0)?.trim().concat(` - ENVIADO ${date}`) ?? '')
 
         renameDir(`${folderPath}${pathSeparator}${folder.name}`, `${folderPath}${pathSeparator}${newName}`).catch(
           (error) => {
