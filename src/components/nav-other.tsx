@@ -1,6 +1,4 @@
-'use client'
-
-import { Link } from 'lucide-react'
+import { Settings } from 'lucide-react'
 
 import {
   SidebarGroup,
@@ -10,15 +8,15 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
 
-export function NavMain() {
+export function NavOther() {
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Ambientes</SidebarGroupLabel>
+      <SidebarGroupLabel>Outros</SidebarGroupLabel>
 
       <SidebarMenu>
         <SidebarMenuItem>
           <SidebarMenuButton>
-            <Link /> Envio de Links
+            <Settings /> Configurações
           </SidebarMenuButton>
         </SidebarMenuItem>
       </SidebarMenu>
