@@ -7,14 +7,7 @@ import { Minus, Square, X } from 'lucide-react'
 import { getCurrentWindow } from '@tauri-apps/api/window'
 
 import { AppSidebar } from '@/components/app-sidebar'
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb'
+import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage } from '@/components/ui/breadcrumb'
 import { Separator } from '@/components/ui/separator'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import { Button } from '@/components/ui/button'
@@ -29,7 +22,7 @@ function App() {
       <SidebarInset>
         <header
           data-tauri-drag-region
-          className="flex h-16 shrink-0 items-center justify-between gap-2 px-4 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12"
+          className="flex h-16 shrink-0 items-center justify-between gap-2 px-4 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12"
         >
           <div className="flex items-center gap-2">
             <SidebarTrigger className="-ml-1" />
@@ -46,15 +39,15 @@ function App() {
           </div>
 
           <div className="space-x-1">
-            <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => window.minimize()}>
+            <Button variant="ghost" size="icon" className="size-7" onClick={() => window.minimize()}>
               <Minus />
             </Button>
 
-            <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => window.toggleMaximize()}>
+            <Button variant="ghost" size="icon" className="size-7" onClick={() => window.toggleMaximize()}>
               <Square className="scale-75" />
             </Button>
 
-            <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-destructive" onClick={() => window.close()}>
+            <Button variant="ghost" size="icon" className="size-7 hover:bg-destructive" onClick={() => window.close()}>
               <X />
             </Button>
           </div>
