@@ -1,27 +1,43 @@
-import { GalleryVerticalEnd } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 
-import { NavMain } from '@/components/nav-main'
-import { NavOther } from '@/components/nav-other'
-import { NavUser } from '@/components/nav-user'
 import { ContextSwitcher } from '@/components/context-switcher'
+import { NavUser } from '@/components/nav-user'
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from '@/components/ui/sidebar'
+import {
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from '@/components/ui/sidebar'
 import { Separator } from './ui/separator'
 
-const data = {
+type NavContent = {
+  name: string
+  pages: {
+    name: string
+    label: string
+    icon: LucideIcon
+  }[]
+}[]
+
+type Data = {
   user: {
-    name: 'Davi Reis',
-    title: 'desenvolvedor',
-  },
-  contexts: [
-    {
-      name: 'UNAMA 1126',
-      logo: GalleryVerticalEnd,
-      plan: 'Farmacia',
-    },
-  ],
+    name: string
+    title: string
+  }
+  contexts: {
+    name: string
+    icon: LucideIcon
+    course: string
+  }[]
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({
+  navContent,
+  data,
+  ...props
+}: { navContent: NavContent; data: Data } & React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -29,11 +45,30 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
 
       <SidebarContent>
-        <NavMain />
+        {navContent.map((section) => (
+          <>
+            {navContent.indexOf(section) > 0 && (
+              <Separator
+                key={section.name}
+                className="hidden self-center group-data-[collapsible=icon]:block group-data-[collapsible=icon]:max-w-7"
+              />
+            )}
 
-        <Separator className="hidden self-center group-data-[collapsible=icon]:block group-data-[collapsible=icon]:max-w-7" />
+            <SidebarGroup key={section.name}>
+              <SidebarGroupLabel>{section.name}</SidebarGroupLabel>
 
-        <NavOther />
+              <SidebarMenu>
+                {section.pages.map((page) => (
+                  <SidebarMenuItem key={page.name}>
+                    <SidebarMenuButton>
+                      <page.icon /> {page.name}
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroup>
+          </>
+        ))}
       </SidebarContent>
 
       <SidebarFooter>

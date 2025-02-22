@@ -3,7 +3,7 @@ import '@fontsource/geist-sans/400.css'
 import '@fontsource/geist-sans/500.css'
 import '@fontsource/geist-sans/700.css'
 
-import { Minus, Square, X } from 'lucide-react'
+import { GalleryVerticalEnd, Link, Minus, Settings, Square, X } from 'lucide-react'
 import { getCurrentWindow } from '@tauri-apps/api/window'
 
 import { AppSidebar } from '@/components/app-sidebar'
@@ -12,12 +12,49 @@ import { Separator } from '@/components/ui/separator'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import { Button } from '@/components/ui/button'
 
+const navContent = [
+  {
+    name: 'Ambientes',
+    pages: [
+      {
+        name: 'Envio de Links',
+        label: 'send-links',
+        icon: Link,
+      },
+    ],
+  },
+  {
+    name: 'Outros',
+    pages: [
+      {
+        name: 'Configurações',
+        label: 'settings',
+        icon: Settings,
+      },
+    ],
+  },
+]
+
+const data = {
+  user: {
+    name: 'Davi Reis',
+    title: 'desenvolvedor',
+  },
+  contexts: [
+    {
+      name: 'UNAMA 1126',
+      course: 'Farmacia',
+      icon: GalleryVerticalEnd,
+    },
+  ],
+}
+
 function App() {
   const window = getCurrentWindow()
 
   return (
     <SidebarProvider>
-      <AppSidebar />
+      <AppSidebar navContent={navContent} data={data} />
 
       <SidebarInset>
         <header
