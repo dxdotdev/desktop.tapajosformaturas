@@ -1,8 +1,8 @@
 import type { LucideIcon } from 'lucide-react'
 
 import { ContextSwitcher } from '@/components/context-switcher'
-import { NavUser } from '@/components/nav-user'
-import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from '@/components/ui/sidebar'
+import { Separator } from '@/components/ui/separator'
+import { Sidebar, SidebarContent, SidebarHeader, SidebarRail } from '@/components/ui/sidebar'
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -10,16 +10,20 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
-import { Separator } from './ui/separator'
+import { TabsList, TabsTrigger } from '@radix-ui/react-tabs'
 
-type NavContent = {
-  name: string
+type NavData = {
+  sections: {
+    title: string
+    label: string
+  }[]
   pages: {
-    name: string
+    title: string
     label: string
     icon: LucideIcon
+    section: string
   }[]
-}[]
+}
 
 type Data = {
   user: {
@@ -33,11 +37,13 @@ type Data = {
   }[]
 }
 
-export function AppSidebar({
-  navContent,
-  data,
-  ...props
-}: { navContent: NavContent; data: Data } & React.ComponentProps<typeof Sidebar>) {
+type Props = {
+  navData: NavData
+  data: Data
+  activeTab: string
+}
+
+export function AppSidebar({ navData, data, activeTab, ...props }: Props & React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -45,36 +51,44 @@ export function AppSidebar({
       </SidebarHeader>
 
       <SidebarContent>
-        {navContent.map((section) => (
+        {navData.sections.map((section) => (
           <>
-            {navContent.indexOf(section) > 0 && (
+            {navData.sections.indexOf(section) >= 1 && (
               <Separator
-                key={section.name}
-                className="hidden self-center group-data-[collapsible=icon]:block group-data-[collapsible=icon]:max-w-7"
+                key={section.title}
+                className="hidden max-w-6 self-center group-data-[collapsible=icon]:block"
               />
             )}
 
-            <SidebarGroup key={section.name}>
-              <SidebarGroupLabel>{section.name}</SidebarGroupLabel>
+            <SidebarGroup key={section.title}>
+              <SidebarGroupLabel>{section.title}</SidebarGroupLabel>
 
               <SidebarMenu>
-                {section.pages.map((page) => (
-                  <SidebarMenuItem key={page.name}>
-                    <SidebarMenuButton>
-                      <page.icon /> {page.name}
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
+                <TabsList>
+                  {navData.pages.map(
+                    (page) =>
+                      page.section === section.label && (
+                        <SidebarMenuItem key={page.title}>
+                          <TabsTrigger value={page.label} asChild>
+                            <SidebarMenuButton isActive={page.label === activeTab}>
+                              <page.icon /> {page.title}
+                            </SidebarMenuButton>
+                          </TabsTrigger>
+                        </SidebarMenuItem>
+                      ),
+                  )}
+                </TabsList>
               </SidebarMenu>
             </SidebarGroup>
           </>
         ))}
       </SidebarContent>
 
-      <SidebarFooter>
-        <NavUser user={data.user} />
-      </SidebarFooter>
-
+      {
+        // <SidebarFooter>
+        //   <NavUser user={data.user} />
+        // </SidebarFooter>
+      }
       <SidebarRail />
     </Sidebar>
   )

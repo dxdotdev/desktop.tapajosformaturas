@@ -3,37 +3,45 @@ import '@fontsource/geist-sans/400.css'
 import '@fontsource/geist-sans/500.css'
 import '@fontsource/geist-sans/700.css'
 
-import { GalleryVerticalEnd, Link, Minus, Settings, Square, X } from 'lucide-react'
 import { getCurrentWindow } from '@tauri-apps/api/window'
+import { GalleryVerticalEnd, Link, Minus, Settings, Square, X } from 'lucide-react'
 
+import { LinksPage } from '@/app/links'
+import { SettingsPage } from '@/app/settings'
 import { AppSidebar } from '@/components/app-sidebar'
 import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage } from '@/components/ui/breadcrumb'
+import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
-import { Button } from '@/components/ui/button'
+import { Tabs, TabsContent } from '@/components/ui/tabs'
+import { useState } from 'react'
 
-const navContent = [
-  {
-    name: 'Ambientes',
-    pages: [
-      {
-        name: 'Envio de Links',
-        label: 'send-links',
-        icon: Link,
-      },
-    ],
-  },
-  {
-    name: 'Outros',
-    pages: [
-      {
-        name: 'Configurações',
-        label: 'settings',
-        icon: Settings,
-      },
-    ],
-  },
-]
+const navData = {
+  sections: [
+    {
+      title: 'Ambientes',
+      label: 'environments',
+    },
+    {
+      title: 'Outros',
+      label: 'other',
+    },
+  ],
+  pages: [
+    {
+      title: 'Envio de Links',
+      label: 'links',
+      icon: Link,
+      section: 'environments',
+    },
+    {
+      title: 'Configurações',
+      label: 'settings',
+      icon: Settings,
+      section: 'other',
+    },
+  ],
+}
 
 const data = {
   user: {
@@ -51,55 +59,63 @@ const data = {
 
 function App() {
   const window = getCurrentWindow()
+  const minimize = () => window.minimize()
+  const toggleMaximize = () => window.toggleMaximize()
+  const close = () => window.close()
+
+  const [activeTab, setActiveTab] = useState('links')
+
+  console.log()
 
   return (
-    <SidebarProvider>
-      <AppSidebar navContent={navContent} data={data} />
+    <Tabs defaultValue={activeTab} onValueChange={(value) => setActiveTab(value)}>
+      <SidebarProvider>
+        <AppSidebar navData={navData} data={data} activeTab={activeTab} />
 
-      <SidebarInset>
-        <header
-          data-tauri-drag-region
-          className="flex h-16 shrink-0 items-center justify-between gap-2 px-4 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12"
-        >
-          <div className="flex items-center gap-2">
-            <SidebarTrigger className="-ml-1" />
+        <SidebarInset>
+          <header
+            data-tauri-drag-region
+            className="flex h-16 shrink-0 items-center justify-between gap-2 px-4 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12"
+          >
+            <div className="flex items-center gap-2">
+              <SidebarTrigger className="-ml-1" />
 
-            <Separator orientation="vertical" className="mr-2 h-4" />
+              <Separator orientation="vertical" className="mr-2 h-4" />
 
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbPage>Criaçao de Links</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
-          </div>
+              <Breadcrumb>
+                <BreadcrumbList>
+                  <BreadcrumbItem className="hidden md:block">
+                    <BreadcrumbPage>{navData.pages.filter((p) => p.label === activeTab)[0].title}</BreadcrumbPage>
+                  </BreadcrumbItem>
+                </BreadcrumbList>
+              </Breadcrumb>
+            </div>
 
-          <div className="space-x-1">
-            <Button variant="ghost" size="icon" className="size-7" onClick={() => window.minimize()}>
-              <Minus />
-            </Button>
+            <div className="space-x-1">
+              <Button variant="ghost" size="icon" className="size-7" onClick={minimize}>
+                <Minus />
+              </Button>
 
-            <Button variant="ghost" size="icon" className="size-7" onClick={() => window.toggleMaximize()}>
-              <Square className="scale-75" />
-            </Button>
+              <Button variant="ghost" size="icon" className="size-7" onClick={toggleMaximize}>
+                <Square className="scale-75" />
+              </Button>
 
-            <Button variant="ghost" size="icon" className="size-7 hover:bg-destructive" onClick={() => window.close()}>
-              <X />
-            </Button>
-          </div>
-        </header>
+              <Button variant="ghost" size="icon" className="size-7 hover:bg-destructive" onClick={close}>
+                <X />
+              </Button>
+            </div>
+          </header>
 
-        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-          <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-            <div className="aspect-video rounded-xl bg-muted/50" />
-            <div className="aspect-video rounded-xl bg-muted/50" />
-            <div className="aspect-video rounded-xl bg-muted/50" />
-          </div>
-          <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
-        </div>
-      </SidebarInset>
-    </SidebarProvider>
+          <TabsContent value="links" asChild>
+            <LinksPage />
+          </TabsContent>
+
+          <TabsContent value="settings" asChild>
+            <SettingsPage />
+          </TabsContent>
+        </SidebarInset>
+      </SidebarProvider>
+    </Tabs>
   )
 }
 
