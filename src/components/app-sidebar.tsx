@@ -45,7 +45,7 @@ type Props = {
 
 export function AppSidebar({ navData, data, activeTab, ...props }: Props & React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar collapsible="icon" {...props} className="text-nowrap">
       <SidebarHeader>
         <ContextSwitcher contexts={data.contexts} />
       </SidebarHeader>

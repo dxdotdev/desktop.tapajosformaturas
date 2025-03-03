@@ -1,5 +1,4 @@
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { LinksSettings } from '@/components/links-settings'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@radix-ui/react-tabs'
 import type { ReactNode } from 'react'
 
@@ -23,20 +22,7 @@ export function SettingsPage() {
         </TabsList>
 
         <TabsContent value="links" className="w-full">
-          <Card className="bg-sidebar">
-            <CardHeader>
-              <CardTitle className="text-xl">Envio de Links</CardTitle>
-              <CardDescription>Modifique as configurações do ambiente de Envio de Links.</CardDescription>
-            </CardHeader>
-
-            <CardContent>
-              <p>Card Content</p>
-            </CardContent>
-
-            <CardFooter className="justify-end">
-              <Button className="font-medium">Salvar</Button>
-            </CardFooter>
-          </Card>
+          <LinksSettings />
         </TabsContent>
       </Tabs>
     </main>

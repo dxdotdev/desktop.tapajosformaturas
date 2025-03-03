@@ -12,7 +12,7 @@ const formSchema = z.object({
   authorization: z.string().nonempty(),
 })
 
-export function Settings() {
+export function LinksSettings() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -27,22 +27,21 @@ export function Settings() {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Configurações</CardTitle>
-        <CardDescription>Configurações necessárias para as Ações</CardDescription>
-      </CardHeader>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(handleSubmit)}>
+        <Card className="bg-sidebar">
+          <CardHeader>
+            <CardTitle className="text-xl">Envio de Links</CardTitle>
+            <CardDescription>Modifique as configurações do ambiente de Envio de Links.</CardDescription>
+          </CardHeader>
 
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)}>
           <CardContent className="space-y-2">
-            <h2>Criar Links</h2>
             <FormField
               name="authorization"
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Authorization</FormLabel>
+                  <FormLabel>Token de Autenticação API Alboom</FormLabel>
 
                   <FormControl>
                     <Input {...field} />
@@ -54,13 +53,13 @@ export function Settings() {
             />
           </CardContent>
 
-          <CardFooter>
-            <Button type="submit" className="ml-auto">
+          <CardFooter className="justify-end">
+            <Button type="submit" className="font-medium">
               Salvar
             </Button>
           </CardFooter>
-        </form>
-      </Form>
-    </Card>
+        </Card>
+      </form>
+    </Form>
   )
 }

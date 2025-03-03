@@ -21,6 +21,7 @@ import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import { Tabs, TabsContent } from '@/components/ui/tabs'
+import { Toaster } from 'sonner'
 
 const navData = {
   sections: [
@@ -71,57 +72,59 @@ function App() {
 
   const [activeTab, setActiveTab] = useState('links')
 
-  console.log()
-
   return (
-    <Tabs defaultValue={activeTab} onValueChange={(value) => setActiveTab(value)}>
-      <SidebarProvider>
-        <AppSidebar navData={navData} data={data} activeTab={activeTab} />
+    <>
+      <Tabs defaultValue={activeTab} onValueChange={(value) => setActiveTab(value)}>
+        <SidebarProvider>
+          <AppSidebar navData={navData} data={data} activeTab={activeTab} />
 
-        <SidebarInset>
-          <header
-            data-tauri-drag-region
-            className="flex h-16 shrink-0 items-center justify-between gap-2 px-4 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12"
-          >
-            <div className="flex items-center gap-2">
-              <SidebarTrigger className="-ml-1" />
+          <SidebarInset>
+            <header
+              data-tauri-drag-region
+              className="flex h-16 shrink-0 items-center justify-between gap-2 px-4 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12"
+            >
+              <div className="flex items-center gap-2">
+                <SidebarTrigger className="-ml-1" />
 
-              <Separator orientation="vertical" className="mr-2 h-4" />
+                <Separator orientation="vertical" className="mr-2 h-4" />
 
-              <Breadcrumb>
-                <BreadcrumbList>
-                  <BreadcrumbItem className="hidden md:block">
-                    <BreadcrumbPage>{navData.pages.filter((p) => p.label === activeTab)[0].title}</BreadcrumbPage>
-                  </BreadcrumbItem>
-                </BreadcrumbList>
-              </Breadcrumb>
-            </div>
+                <Breadcrumb>
+                  <BreadcrumbList>
+                    <BreadcrumbItem className="hidden md:block">
+                      <BreadcrumbPage>{navData.pages.filter((p) => p.label === activeTab)[0].title}</BreadcrumbPage>
+                    </BreadcrumbItem>
+                  </BreadcrumbList>
+                </Breadcrumb>
+              </div>
 
-            <div className="space-x-1">
-              <Button variant="ghost" size="icon" className="size-7" onClick={minimize}>
-                <Minus />
-              </Button>
+              <div className="space-x-1">
+                <Button variant="ghost" size="icon" className="size-7" onClick={minimize}>
+                  <Minus />
+                </Button>
 
-              <Button variant="ghost" size="icon" className="size-7" onClick={toggleMaximize}>
-                <Square className="scale-75" />
-              </Button>
+                <Button variant="ghost" size="icon" className="size-7" onClick={toggleMaximize}>
+                  <Square className="scale-75" />
+                </Button>
 
-              <Button variant="ghost" size="icon" className="size-7 hover:bg-destructive" onClick={close}>
-                <X />
-              </Button>
-            </div>
-          </header>
+                <Button variant="ghost" size="icon" className="size-7 hover:bg-destructive" onClick={close}>
+                  <X />
+                </Button>
+              </div>
+            </header>
 
-          <TabsContent value="links" asChild>
-            <LinksPage />
-          </TabsContent>
+            <TabsContent value="links" asChild>
+              <LinksPage />
+            </TabsContent>
 
-          <TabsContent value="settings" asChild>
-            <SettingsPage />
-          </TabsContent>
-        </SidebarInset>
-      </SidebarProvider>
-    </Tabs>
+            <TabsContent value="settings" asChild>
+              <SettingsPage />
+            </TabsContent>
+          </SidebarInset>
+        </SidebarProvider>
+      </Tabs>
+
+      <Toaster />
+    </>
   )
 }
 
