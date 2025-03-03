@@ -1,10 +1,17 @@
 import '@/index.css'
-import '@fontsource/geist-sans/400.css'
-import '@fontsource/geist-sans/500.css'
-import '@fontsource/geist-sans/700.css'
+import '@fontsource/outfit/100.css'
+import '@fontsource/outfit/200.css'
+import '@fontsource/outfit/300.css'
+import '@fontsource/outfit/400.css'
+import '@fontsource/outfit/500.css'
+import '@fontsource/outfit/600.css'
+import '@fontsource/outfit/700.css'
+import '@fontsource/outfit/800.css'
+import '@fontsource/outfit/900.css'
 
 import { getCurrentWindow } from '@tauri-apps/api/window'
 import { GalleryVerticalEnd, Link, Minus, Settings, Square, X } from 'lucide-react'
+import { useState } from 'react'
 
 import { LinksPage } from '@/app/links'
 import { SettingsPage } from '@/app/settings'
@@ -14,7 +21,6 @@ import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import { Tabs, TabsContent } from '@/components/ui/tabs'
-import { useState } from 'react'
 
 const navData = {
   sections: [

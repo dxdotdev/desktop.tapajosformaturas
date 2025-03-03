@@ -68,7 +68,7 @@ export function AppSidebar({ navData, data, activeTab, ...props }: Props & React
                   {navData.pages.map(
                     (page) =>
                       page.section === section.label && (
-                        <SidebarMenuItem key={page.title}>
+                        <SidebarMenuItem key={page.label}>
                           <TabsTrigger value={page.label} asChild>
                             <SidebarMenuButton isActive={page.label === activeTab}>
                               <page.icon /> {page.title}
