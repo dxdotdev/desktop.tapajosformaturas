@@ -1,4 +1,5 @@
-import type { LucideIcon } from 'lucide-react'
+import { TabsList, TabsTrigger } from '@radix-ui/react-tabs'
+import { useAtom } from 'jotai'
 
 import { ContextSwitcher } from '@/components/context-switcher'
 import { Separator } from '@/components/ui/separator'
@@ -10,50 +11,23 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
-import { TabsList, TabsTrigger } from '@radix-ui/react-tabs'
+import { SIDEBAR_NAV_CONTENT } from '@/lib/constants'
+import { currentPageAtom, dataAtom } from '@/lib/state'
 
-type NavData = {
-  sections: {
-    title: string
-    label: string
-  }[]
-  pages: {
-    title: string
-    label: string
-    icon: LucideIcon
-    section: string
-  }[]
-}
+export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
+  const [currentPage] = useAtom(currentPageAtom)
+  const [data] = useAtom(dataAtom)
 
-type Data = {
-  user: {
-    name: string
-    title: string
-  }
-  contexts: {
-    name: string
-    icon: LucideIcon
-    course: string
-  }[]
-}
-
-type Props = {
-  navData: NavData
-  data: Data
-  activeTab: string
-}
-
-export function AppSidebar({ navData, data, activeTab, ...props }: Props & React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props} className="text-nowrap">
       <SidebarHeader>
-        <ContextSwitcher contexts={data.contexts} />
+        <ContextSwitcher recentContexts={data.recentContexts} />
       </SidebarHeader>
 
       <SidebarContent>
-        {navData.sections.map((section) => (
+        {SIDEBAR_NAV_CONTENT.sections.map((section) => (
           <>
-            {navData.sections.indexOf(section) >= 1 && (
+            {SIDEBAR_NAV_CONTENT.sections.indexOf(section) >= 1 && (
               <Separator
                 key={section.title}
                 className="hidden max-w-6 self-center group-data-[collapsible=icon]:block"
@@ -65,12 +39,12 @@ export function AppSidebar({ navData, data, activeTab, ...props }: Props & React
 
               <SidebarMenu>
                 <TabsList>
-                  {navData.pages.map(
+                  {SIDEBAR_NAV_CONTENT.pages.map(
                     (page) =>
                       page.section === section.label && (
                         <SidebarMenuItem key={page.label}>
                           <TabsTrigger value={page.label} asChild>
-                            <SidebarMenuButton isActive={page.label === activeTab}>
+                            <SidebarMenuButton isActive={page.label === currentPage}>
                               <page.icon /> {page.title}
                             </SidebarMenuButton>
                           </TabsTrigger>

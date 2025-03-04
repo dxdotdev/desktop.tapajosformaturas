@@ -10,8 +10,9 @@ import '@fontsource/outfit/800.css'
 import '@fontsource/outfit/900.css'
 
 import { getCurrentWindow } from '@tauri-apps/api/window'
-import { GalleryVerticalEnd, Link, Minus, Settings, Square, X } from 'lucide-react'
-import { useState } from 'react'
+import { useAtom } from 'jotai'
+import { Minus, Square, X } from 'lucide-react'
+import { Toaster } from 'sonner'
 
 import { LinksPage } from '@/app/links'
 import { SettingsPage } from '@/app/settings'
@@ -21,48 +22,8 @@ import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import { Tabs, TabsContent } from '@/components/ui/tabs'
-import { Toaster } from 'sonner'
-
-const navData = {
-  sections: [
-    {
-      title: 'Ambientes',
-      label: 'environments',
-    },
-    {
-      title: 'Outros',
-      label: 'other',
-    },
-  ],
-  pages: [
-    {
-      title: 'Envio de Links',
-      label: 'links',
-      icon: Link,
-      section: 'environments',
-    },
-    {
-      title: 'Configurações',
-      label: 'settings',
-      icon: Settings,
-      section: 'other',
-    },
-  ],
-}
-
-const data = {
-  user: {
-    name: 'Davi Reis',
-    title: 'desenvolvedor',
-  },
-  contexts: [
-    {
-      name: 'UNAMA 1126',
-      course: 'Farmacia',
-      icon: GalleryVerticalEnd,
-    },
-  ],
-}
+import { type Page, SIDEBAR_NAV_CONTENT } from '@/lib/constants'
+import { currentPageAtom } from '@/lib/state'
 
 function App() {
   const window = getCurrentWindow()
@@ -70,13 +31,13 @@ function App() {
   const toggleMaximize = () => window.toggleMaximize()
   const close = () => window.close()
 
-  const [activeTab, setActiveTab] = useState('links')
+  const [currentPage, setCurrentPage] = useAtom(currentPageAtom)
 
   return (
     <>
-      <Tabs defaultValue={activeTab} onValueChange={(value) => setActiveTab(value)}>
+      <Tabs defaultValue={currentPage} onValueChange={(value) => setCurrentPage(value as Page)}>
         <SidebarProvider>
-          <AppSidebar navData={navData} data={data} activeTab={activeTab} />
+          <AppSidebar />
 
           <SidebarInset>
             <header
@@ -91,7 +52,9 @@ function App() {
                 <Breadcrumb>
                   <BreadcrumbList>
                     <BreadcrumbItem className="hidden md:block">
-                      <BreadcrumbPage>{navData.pages.filter((p) => p.label === activeTab)[0].title}</BreadcrumbPage>
+                      <BreadcrumbPage>
+                        {SIDEBAR_NAV_CONTENT.pages.filter((p) => p.label === currentPage)[0].title}
+                      </BreadcrumbPage>
                     </BreadcrumbItem>
                   </BreadcrumbList>
                 </Breadcrumb>
