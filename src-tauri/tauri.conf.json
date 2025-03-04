@@ -16,6 +16,8 @@
         "width": 1200,
         "height": 800,
         "center": true,
+        "minWidth": 760,
+        "minHeight": 800,
         "decorations": false
       }
     ],

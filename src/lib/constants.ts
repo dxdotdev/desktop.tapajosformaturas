@@ -1,4 +1,4 @@
-import { Link, Settings } from 'lucide-react'
+import { Link, type LucideIcon, Settings } from 'lucide-react'
 
 export const SIDEBAR_NAV_CONTENT = {
   sections: [
@@ -29,3 +29,10 @@ export const SIDEBAR_NAV_CONTENT = {
 
 const labels = SIDEBAR_NAV_CONTENT.pages.map((p) => p.label)
 export type Page = (typeof labels)[number]
+
+export type Context = {
+  institution: string
+  contractNumber: string
+  course: string
+  icon: LucideIcon
+}

@@ -1,4 +1,5 @@
-import { ChevronsUpDown, type LucideIcon, Plus } from 'lucide-react'
+import { useAtom } from 'jotai'
+import { ChevronsUpDown, Plus } from 'lucide-react'
 
 import {
   DropdownMenu,
@@ -9,19 +10,14 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@/components/ui/sidebar'
-import { useState } from 'react'
+import { currentContextAtom, recentContextsAtom } from '@/lib/state'
 
-type Props = {
-  recentContexts: {
-    name: string
-    course: string
-    icon: LucideIcon
-  }[]
-}
-
-export function ContextSwitcher({ recentContexts }: Props) {
+export function ContextSwitcher() {
   const { isMobile } = useSidebar()
-  const [activeContext, setActiveContext] = useState(recentContexts[0])
+  const [recentContexts] = useAtom(recentContextsAtom)
+  const [currentContext, setCurrentContext] = useAtom(currentContextAtom)
+
+  const contextName = `${currentContext.institution} ${currentContext.contractNumber}`
 
   return (
     <SidebarMenu>
@@ -33,11 +29,11 @@ export function ContextSwitcher({ recentContexts }: Props) {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                <activeContext.icon className="size-4" />
+                <currentContext.icon className="size-4" />
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">{activeContext.name}</span>
-                <span className="truncate text-xs">{activeContext.course}</span>
+                <span className="truncate font-semibold">{contextName}</span>
+                <span className="truncate text-xs">{currentContext.course}</span>
               </div>
               <ChevronsUpDown className="ml-auto" />
             </SidebarMenuButton>
@@ -51,12 +47,12 @@ export function ContextSwitcher({ recentContexts }: Props) {
           >
             <DropdownMenuLabel className="text-muted-foreground text-xs">Recentes</DropdownMenuLabel>
             {recentContexts.map((context) => (
-              <DropdownMenuItem key={context.name} onClick={() => setActiveContext(context)} className="gap-2 p-2">
+              <DropdownMenuItem key={contextName} onClick={() => setCurrentContext(context)} className="gap-2 p-2">
                 <div className="flex size-6 items-center justify-center rounded-sm border">
                   <context.icon className="size-4 shrink-0" />
                 </div>
 
-                {context.name}
+                {contextName}
               </DropdownMenuItem>
             ))}
 

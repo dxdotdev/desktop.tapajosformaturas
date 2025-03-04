@@ -12,16 +12,15 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
 import { SIDEBAR_NAV_CONTENT } from '@/lib/constants'
-import { currentPageAtom, dataAtom } from '@/lib/state'
+import { currentPageAtom } from '@/lib/state'
 
 export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
   const [currentPage] = useAtom(currentPageAtom)
-  const [data] = useAtom(dataAtom)
 
   return (
     <Sidebar collapsible="icon" {...props} className="text-nowrap">
       <SidebarHeader>
-        <ContextSwitcher recentContexts={data.recentContexts} />
+        <ContextSwitcher />
       </SidebarHeader>
 
       <SidebarContent>
