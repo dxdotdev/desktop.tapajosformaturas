@@ -1,5 +1,7 @@
+import * as dialog from '@tauri-apps/plugin-dialog'
 import { useAtom } from 'jotai'
 import { ChevronsUpDown, Plus } from 'lucide-react'
+import { toast } from 'sonner'
 
 import {
   DropdownMenu,
@@ -10,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@/components/ui/sidebar'
+
 import { currentContextAtom, recentContextsAtom } from '@/lib/state'
 
 export function ContextSwitcher() {
@@ -18,6 +21,19 @@ export function ContextSwitcher() {
   const [currentContext, setCurrentContext] = useAtom(currentContextAtom)
 
   const contextName = `${currentContext.institution} ${currentContext.contractNumber}`
+
+  async function handleAddContext() {
+    const folderPath = await dialog.open({
+      title: 'Adicionar contexto',
+      directory: true,
+      multiple: false,
+    })
+
+    if (!folderPath) {
+      toast.error('Selecione o caminho da pasta para adicionar um contexto!')
+      return
+    }
+  }
 
   return (
     <SidebarMenu>
@@ -58,7 +74,7 @@ export function ContextSwitcher() {
 
             <DropdownMenuSeparator />
 
-            <DropdownMenuItem className="gap-2 p-2">
+            <DropdownMenuItem className="gap-2 p-2" onClick={handleAddContext}>
               <div className="flex size-6 items-center justify-center rounded-md border bg-background">
                 <Plus className="size-4" />
               </div>

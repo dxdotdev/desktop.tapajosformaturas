@@ -86,7 +86,7 @@ function App() {
         </SidebarProvider>
       </Tabs>
 
-      <Toaster />
+      <Toaster theme="dark" richColors />
     </>
   )
 }

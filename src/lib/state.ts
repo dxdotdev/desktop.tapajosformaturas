@@ -1,6 +1,6 @@
 import { atom } from 'jotai'
 
-import type { Context, Page } from '@/lib/constants'
+import type { Context, Page } from '@/lib/types'
 import { GalleryVerticalEnd } from 'lucide-react'
 
 export const currentPageAtom = atom<Page>('links')

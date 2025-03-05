@@ -28,12 +28,12 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
           <>
             {SIDEBAR_NAV_CONTENT.sections.indexOf(section) >= 1 && (
               <Separator
-                key={section.title}
+                key={section.label}
                 className="hidden max-w-6 self-center group-data-[collapsible=icon]:block"
               />
             )}
 
-            <SidebarGroup key={section.title}>
+            <SidebarGroup key={section.label}>
               <SidebarGroupLabel>{section.title}</SidebarGroupLabel>
 
               <SidebarMenu>
